@@ -34,6 +34,7 @@ pub struct BLEAdvertisedDevice {
   service_data_list: Vec<BLEServiceData>,
   tx_power: Option<u8>,
   manufacture_data: Option<Vec<u8>>,
+  pub raw_data: Vec<u8>,
 }
 
 impl BLEAdvertisedDevice {
@@ -49,6 +50,7 @@ impl BLEAdvertisedDevice {
       service_data_list: Vec::new(),
       tx_power: None,
       manufacture_data: None,
+      raw_data: Vec::new(),
     }
   }
 
@@ -102,6 +104,8 @@ impl BLEAdvertisedDevice {
   pub(crate) fn parse_advertisement(&mut self, payload: &[u8]) {
     let mut payload = payload;
 
+    // append raw data
+    self.raw_data.extend_from_slice(payload);
     loop {
       let Some(length) = payload.first() else {
         return;
